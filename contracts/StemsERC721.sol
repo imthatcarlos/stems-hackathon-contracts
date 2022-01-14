@@ -72,7 +72,7 @@ contract StemsERC721 is ERC721, SuperReceiver {
   }
 
   function _onFlowUpdated(uint256 tokenId, address sender, int96 flowRate) internal virtual override {
-    stemsFactory.sf_flowUpdatedCallback(address(this), tokenId, sender, flowRate);
+    stemsFactory.sf_flowUpdatedCallback(tokenId, sender, flowRate);
   }
 
   receive() external payable {

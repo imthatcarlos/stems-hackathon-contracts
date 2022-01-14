@@ -14,10 +14,16 @@ contract StemsFactory is Ownable {
   address private sf_acceptedToken;
 
   mapping (address => address[]) private collections; // deployer => [collection1, collection2]
+  mapping (address => bool) private tokensDeployed;
 
   event CollectionCreated(address indexed token, address deployer, string name);
   event StreamUpdated(address indexed token, uint256 tokenId, address sender, int96 flowRate);
   event StreamDeleted(address indexed token, uint256 tokenId, address sender);
+
+  modifier onlyTokensDeployed() {
+    require(tokensDeployed[msg.sender] == true, "StemsFactory:: only tokens deployed");
+    _;
+  }
 
   /// @dev contract contructor
   constructor(address host, address cfa, address acceptedToken) {
@@ -47,15 +53,20 @@ contract StemsFactory is Ownable {
     );
 
     collections[msg.sender].push(address(token));
+    tokensDeployed[address(token)] = true;
 
     emit CollectionCreated(address(token), msg.sender, name);
   }
 
-  function sf_flowUpdatedCallback(address token, uint256 tokenId, address sender, int96 flowRate) public {
+  /// @dev callback for when an instance of StemsERC721 receives a stream update
+  /// @param tokenId the specific tokenId that received the stream update
+  /// @param sender the account that triggered the change
+  /// @param flowRate the new stream flow rate (see SuperReceiver.sol)
+  function sf_flowUpdatedCallback(uint256 tokenId, address sender, int96 flowRate) public onlyTokensDeployed {
     if (flowRate == int96(0)) {
-      emit StreamDeleted(token, tokenId, sender);
+      emit StreamDeleted(msg.sender, tokenId, sender);
     } else {
-      emit StreamUpdated(token, tokenId, sender, flowRate);
+      emit StreamUpdated(msg.sender, tokenId, sender, flowRate);
     }
   }
 

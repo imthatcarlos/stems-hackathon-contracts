@@ -17,9 +17,11 @@ const CONTRACTS_PATH = `./${network}-contracts.json`;
 const contractsFile = () => path.join(__dirname, CONTRACTS_PATH);
 const contractsDeployed = JSON.parse(fs.readFileSync(contractsFile(), "utf8"));
 
-const updateContractsDeployed = (contract, address) => {
-  contractsDeployed[contract] = address;
-  fs.writeFileSync(contractsFile(), JSON.stringify(contractsDeployed, null, 2));
+const updateContractsDeployed = (contract, address, network = DEFAULT_NETWORK) => {
+  const file = path.join(__dirname, `./${network}-contracts.json`);
+  const contracts = JSON.parse(fs.readFileSync(file, 'utf8'));
+  contracts[contract] = address;
+  fs.writeFileSync(file, JSON.stringify(contracts, null, 2));
 };
 
 const updateConfig = (_config) => {

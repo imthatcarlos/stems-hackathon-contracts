@@ -34,5 +34,9 @@ module.exports = {
       saveDeployments: true,
       tags: ['local']
     },
+    rinkeby: {
+      url: process.env.ALCHEMY_RINKEBY_URL,
+      accounts: [process.env.PRIVATE_KEY]
+    },
   }
 };

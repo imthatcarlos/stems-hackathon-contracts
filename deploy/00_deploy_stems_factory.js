@@ -22,7 +22,7 @@ module.exports = async ({ getNamedAccounts, deployments, network }) => {
     log: true,
   });
 
-  updateContractsDeployed('StemsFactory', address);
+  updateContractsDeployed('StemsFactory', address, network.name);
 };
 
 module.exports.tags = ['StemsFactory'];

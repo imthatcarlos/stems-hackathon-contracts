@@ -8,7 +8,7 @@
     "localhost": "npx hardhat node",
     "metadata": "node ./scripts/generate_metadata.js",
     "deploy:localhost": "npx hardhat deploy --network localhost",
-    "read:localhost": "HARDHAT_NETWORK=localhost node ./scripts/read.js"
+    "deploy:rinkeby": "npx hardhat deploy --network rinkeby"
   },
   "dependencies": {
     "@nomiclabs/hardhat-web3": "^2.0.0",

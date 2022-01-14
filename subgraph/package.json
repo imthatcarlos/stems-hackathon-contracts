@@ -3,6 +3,7 @@
   "license": "UNLICENSED",
   "version": "1.0.0",
   "scripts": {
+    "subgraph:init": "npx graph init --product hosted-service --network rinkeby --from-contract 0xE4FD3f77Bc07567CC278671C57F98Cd39961c3eD",
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ imthatcarlos/stemsdaofactory",

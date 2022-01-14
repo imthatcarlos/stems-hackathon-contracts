@@ -1,0 +1,32 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: StemsFactory
+    network: rinkeby
+    source:
+      address: "0xE4FD3f77Bc07567CC278671C57F98Cd39961c3eD"
+      abi: StemsFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - CollectionCreated
+        - OwnershipTransferred
+        - StreamDeleted
+        - StreamUpdated
+      abis:
+        - name: StemsFactory
+          file: ./abis/StemsFactory.json
+      eventHandlers:
+        - event: CollectionCreated(indexed address,address,string)
+          handler: handleCollectionCreated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: StreamDeleted(indexed address,uint256,address)
+          handler: handleStreamDeleted
+        - event: StreamUpdated(indexed address,uint256,address,int96)
+          handler: handleStreamUpdated
+      file: ./src/mapping.ts

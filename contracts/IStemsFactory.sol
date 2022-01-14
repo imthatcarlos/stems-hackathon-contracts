@@ -2,5 +2,5 @@
 pragma solidity ^0.8.0;
 
 interface IStemsFactory {
-  function sf_flowUpdatedCallback(address token, uint256 tokenId, address sender, int96 flowRate) external;
+  function sf_flowUpdatedCallback(uint256 tokenId, address sender, int96 flowRate) external;
 }
