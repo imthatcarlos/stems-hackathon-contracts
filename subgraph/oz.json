@@ -1,0 +1,7 @@
+{
+  "output": "oz.",
+  "chain": "rinkeby",
+  "datasources": [
+    { "address": "0x6dd9885799d726290b40c6057b5838aed3c97e3f", "startBlock": 9995553, "module": [ "erc721" ] }
+  ]
+}

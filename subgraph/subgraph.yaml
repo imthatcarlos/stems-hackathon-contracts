@@ -8,13 +8,13 @@ dataSources:
     source:
       address: "0xE4FD3f77Bc07567CC278671C57F98Cd39961c3eD"
       abi: StemsFactory
+      startBlock: 9995553
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - CollectionCreated
-        - OwnershipTransferred
         - StreamDeleted
         - StreamUpdated
       abis:
@@ -23,10 +23,31 @@ dataSources:
       eventHandlers:
         - event: CollectionCreated(indexed address,address,string)
           handler: handleCollectionCreated
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: StreamDeleted(indexed address,uint256,address)
           handler: handleStreamDeleted
         - event: StreamUpdated(indexed address,uint256,address,int96)
           handler: handleStreamUpdated
       file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: ERC721
+    network: rinkeby
+    source:
+      abi: IERC721
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ERC721Contract
+      abis:
+        - name: IERC721
+          file: ./node_modules/@openzeppelin/contracts/build/contracts/IERC721Metadata.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./node_modules/@openzeppelin/subgraphs/src/datasources/erc721.ts

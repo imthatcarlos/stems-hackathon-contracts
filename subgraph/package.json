@@ -4,16 +4,18 @@
   "version": "1.0.0",
   "scripts": {
     "subgraph:init": "npx graph init --product hosted-service --network rinkeby --from-contract 0xE4FD3f77Bc07567CC278671C57F98Cd39961c3eD",
+    "subgraph:oz": "npx graph-compiler --config oz.json --include node_modules/@openzeppelin/subgraphs/src/datasources --export-schema --export-subgraph",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ imthatcarlos/stemsdaofactory",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ imthatcarlos/stemsdao-factory",
     "create-local": "graph create --node http://localhost:8020/ scaffold-eth/your-contract",
     "remove-local": "graph remove --node http://localhost:8020/ scaffold-eth/your-contract",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 scaffold-eth/your-contract"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.22.1",
-    "@graphprotocol/graph-ts": "^0.22.1"
+    "@graphprotocol/graph-ts": "^0.22.1",
+    "@openzeppelin/subgraphs": "^0.1.6-1"
   },
   "devDependencies": {
     "mustache": "^3.1.0"

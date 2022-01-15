@@ -1,33 +1,75 @@
-import { BigInt, Address } from "@graphprotocol/graph-ts";
+import { BigInt, store } from "@graphprotocol/graph-ts";
+import { fetchAccount } from "@openzeppelin/subgraphs/src/fetch/account";
+import { fetchERC721Token } from "@openzeppelin/subgraphs/src/fetch/erc721";
+import { ERC721 } from "../generated/templates";
 import {
-  YourContract,
-  SetPurpose,
-} from "../generated/YourContract/YourContract";
-import { Purpose, Sender } from "../generated/schema";
+  StemsFactory,
+  CollectionCreated,
+  StreamUpdated,
+  StreamDeleted
+} from "../generated/StemsFactory/StemsFactory";
+import {
+  StemsFactoryContract,
+  StemsArtist,
+  StemsCollection,
+  StemsCollectionSponsor,
+  StemsCollectionSponsorHistorical
+} from "../generated/schema";
 
-export function handleSetPurpose(event: SetPurpose): void {
-  let senderString = event.params.sender.toHexString();
+export function handleCollectionCreated(event: CollectionCreated): void {
+  const tokenContractId = fetchAccount(event.params.token).id;
+  const factoryContractId = event.address.toString();
+  const artistId = fetchAccount(event.params.deployer).id;
 
-  let sender = Sender.load(senderString);
+  const entity = new StemsCollection(tokenContractId);
+  const artistEntity = new StemsArtist(event.params.deployer.toString());
+  const factoryEntity = new StemsFactoryContract(factoryContractId);
 
-  if (sender === null) {
-    sender = new Sender(senderString);
-    sender.address = event.params.sender;
-    sender.createdAt = event.block.timestamp;
-    sender.purposeCount = BigInt.fromI32(1);
-  } else {
-    sender.purposeCount = sender.purposeCount.plus(BigInt.fromI32(1));
+  ERC721.create(event.params.token); // dynamically add to datasources
+
+  entity.factory = factoryContractId;
+  entity.artist = artistId;
+  entity.contract = tokenContractId;
+  entity.timestamp = event.block.timestamp;
+  entity.save();
+
+  artistEntity.factory = factoryContractId;
+  artistEntity.account = artistId;
+  artistEntity.save(); // @TODO: can't we check if it exists without loading?
+
+  factoryEntity.save();
+}
+
+// gets called when a stream is created/updated, with `flowRate` being the only value that could actually change
+export function handleStreamUpdated(event: StreamUpdated): void {
+  const tokenContractId = fetchAccount(event.params.token).id;
+  const sponsorId = `${tokenContractId}/${event.params.sender.toString().toLowerCase()}/${event.params.tokenId.toHex()}`;
+  const entity = new StemsCollectionSponsor(sponsorId);
+
+  entity.account = fetchAccount(event.params.sender).id;
+  entity.collection = tokenContractId;
+  entity.flowRate = event.params.flowRate;
+  entity.token = `${tokenContractId}/${event.params.tokenId.toHex()}`; // fetchERC721Token
+  entity.timestamp = event.block.timestamp;
+
+  entity.save();
+}
+
+export function handleStreamDeleted(event: StreamDeleted): void {
+  const tokenContractId = fetchAccount(event.params.token).id;
+  const sponsorId = `${tokenContractId}/${event.params.sender.toString().toLowerCase()}/${event.params.tokenId.toHex()}`;
+  const removedEntity = StemsCollectionSponsor.load(sponsorId);
+
+  if (removedEntity) {
+    const createdAt = removedEntity.timestamp;
+    store.remove('StemsCollectionSponsor', sponsorId);
+
+    // for historical
+    const entity = new StemsCollectionSponsorHistorical(`${sponsorId}-${removedEntity.timestamp.toString()}`);
+    entity.account = fetchAccount(event.params.sender).id;
+    entity.collection = tokenContractId;
+    entity.createdAt = createdAt;
+    entity.deletedAt = event.block.timestamp;
+    entity.save();
   }
-
-  let purpose = new Purpose(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  );
-
-  purpose.purpose = event.params.purpose;
-  purpose.sender = senderString;
-  purpose.createdAt = event.block.timestamp;
-  purpose.transactionHash = event.transaction.hash.toHex();
-
-  purpose.save();
-  sender.save();
 }
