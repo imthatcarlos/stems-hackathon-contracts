@@ -194,11 +194,16 @@ async function main() {
   const collections = await _getCollections(factory);
   console.log(JSON.stringify({ collections }, null, 2))
 
-  // the magic; in this case, account two will upgrade some of their fUSDC and then create a stream to the first collection contract available
-
+  // the magic; in this case, account two will
+  // - upgrade some of their fUSDC
+  // - create a stream to the first collection contract available
+  // - (optional) then promptly delete the stream :)
   await upgradeUSDC(factory, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
   await createStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
-  await deleteStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
+  // await deleteStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
+
+  const updatedCollections = await _getCollections(factory);
+  console.log(JSON.stringify({ updatedCollections }, null, 2))
 };
 
 // We recommend this pattern to be able to use async/await everywhere

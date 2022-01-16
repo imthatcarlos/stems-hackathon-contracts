@@ -27,6 +27,13 @@ const QUERY_COLLECTIONS = gql`
           identifier
         }
       }
+      pastSponsors {
+        account {
+          id
+        }
+        createdAt
+        deletedAt
+      }
     }
   }
 `;
