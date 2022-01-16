@@ -11,7 +11,9 @@
     "deploy:rinkeby": "npx hardhat deploy --network rinkeby",
     "demo:rinkeby": "HARDHAT_NETWORK=rinkeby node ./scripts/demo.js",
     "deploy:ropsten": "npx hardhat deploy --network ropsten",
-    "demo:ropsten": "HARDHAT_NETWORK=ropsten node ./scripts/demo.js"
+    "demo:ropsten": "HARDHAT_NETWORK=ropsten node ./scripts/demo.js",
+    "deploy:mumbai": "npx hardhat deploy --network mumbai",
+    "demo:mumbai": "HARDHAT_NETWORK=mumbai node ./scripts/demo.js"
   },
   "dependencies": {
     "@nomiclabs/hardhat-web3": "^2.0.0",

@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: StemsFactory
-    network: ropsten
+    network: mumbai
     source:
-      address: "0x2cBF9A2F164872cB4FF1424F7729847ffc58F3Fb"
+      address: "0xd88a7966DD122Ece54a30454CF6de95E9022516b"
       abi: StemsFactory
-      startBlock: 11823000
+      startBlock: 23940054
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -31,7 +31,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: ERC721
-    network: ropsten
+    network: mumbai
     source:
       abi: IERC721
     mapping:

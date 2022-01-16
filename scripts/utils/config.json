@@ -26,5 +26,12 @@
       "cfa": "0xaD2F1f7cd663f6a15742675f975CcBD42bb23a88",
       "acceptedToken": "0x2dC36872a445adF0bFf63cc0eeee52A2b801625f"
     }
+  },
+  "mumbai": {
+    "StemsFactory": {
+      "host": "0xEB796bdb90fFA0f28255275e16936D25d3418603",
+      "cfa": "0x49e565Ed1bdc17F3d220f72DF0857C26FA83F873",
+      "acceptedToken": "0x42bb40bF79730451B11f6De1CbA222F17b87Afd7"
+    }
   }
 }

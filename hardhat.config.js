@@ -38,5 +38,9 @@ module.exports = {
       url: process.env.ALCHEMY_URL,
       accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2]
     },
+    mumbai: {
+      url: process.env.ALCHEMY_MUMBAI_URL,
+      accounts: [process.env.PRIVATE_KEY, process.env.PRIVATE_KEY_2]
+    },
   }
 };

@@ -12,7 +12,7 @@ const SuperTokenABI = require("@superfluid-finance/ethereum-contracts/build/cont
 const networkName = hre.network.name
 const { contractsFile, contractsDeployed, config } = require("./utils/migrations");
 const tokenConfig = require('../scripts/utils/config.json').localhost.StemsERC721;
-const { SUBGRAPH_URL } = process.env;
+const { SUBGRAPH_URL, SUBGRAPH_URL_MUMBAI } = process.env;
 const { QUERY_COLLECTIONS } = require('./graphql/StemsFactory');
 
 const MAX_SUPPLY = 5;
@@ -47,7 +47,8 @@ const _createCollection = async (factory, deployer) => {
 };
 
 const _getCollections = async ({ address }) => {
-  const client = new GraphQLClient(SUBGRAPH_URL);
+  const url = networkName === 'mumbai' ? SUBGRAPH_URL_MUMBAI : SUBGRAPH_URL;
+  const client = new GraphQLClient(url);
   const { stemsCollections } = await client.request(QUERY_COLLECTIONS, { factory: address.toLowerCase() });
   return stemsCollections;
 }
@@ -56,7 +57,7 @@ const _getAvailableCollections = async ({ address }) => {
   const collections = await _getCollections({ address });
 
   return (await Promise.all(collections.map(async(collection) => {
-    const token = await getStemsERC721('0xb72ba9a6fc9274a579577a28d604e7150f384dce');
+    const token = await getStemsERC721(collection.id);
     const [_avail, _total, _mintCost] = await Promise.all([
       token.availableSupply(),
       token.totalSupply(),
@@ -72,7 +73,7 @@ const _getAvailableCollections = async ({ address }) => {
 const _mintSingle = async (account, collectionData) => {
   console.log('_mintSingle...');
   const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = await hre.ethers.provider.getFeeData();
-  const token = await getStemsERC721('0xb72ba9a6fc9274a579577a28d604e7150f384dce');//collection.contract.id);
+  const token = await getStemsERC721(collectionData.id);
   const tx = await token.mint({
     from: account,
     value: hre.ethers.utils.formatUnits(collectionData.mintCost, 'wei'),
@@ -198,7 +199,7 @@ async function main() {
   // - upgrade some of their fUSDC
   // - create a stream to the first collection contract available
   // - (optional) then promptly delete the stream :)
-  await upgradeUSDC(factory, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
+  // await upgradeUSDC(factory, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
   await createStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
   // await deleteStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
 

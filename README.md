@@ -11,11 +11,19 @@ yarn
 yarn compile
 ```
 
-## subgraph
-https://thegraph.com/hosted-service/subgraph/imthatcarlos/stemsdao-factory
+## deploy contracts
+```
+yarn deploy:ropsten
+# yarn deploy:mumbai
+```
+
+## subgraphs
+[ropsten] https://thegraph.com/hosted-service/subgraph/imthatcarlos/stemsdao-factory
+
+[mumbai] https://thegraph.com/hosted-service/subgraph/imthatcarlos/stemsdao-factory-mumbai
 
 ## run demo script
-`yarn demo:ropsten` does a couple things:
+`yarn demo:ropsten` (or `yarn demo:mumbai`) does a couple things:
 1. call `StemsFactory`.createCollection() which in turn deploys a new StemsERC721 contract
 2. uses thegraph to query against `StemsFactory` for all collections available
 3. mints 1 token for the user on the first collection available

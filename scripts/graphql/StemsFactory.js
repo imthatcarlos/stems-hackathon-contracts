@@ -3,6 +3,7 @@ const { gql } = require('graphql-request');
 const QUERY_COLLECTIONS = gql`
   query($factory: String!) {
     stemsCollections(where: { factory: $factory }) {
+      id
       artist {
         id
       }
