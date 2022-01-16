@@ -157,6 +157,32 @@ const createStream = async ({ provider }, collections, { address, privateKey }) 
   }
 };
 
+const deleteStream = async ({ provider }, collections, { address, privateKey }) => {
+  console.log('deleteStream...');
+
+  const collectionToSponsor = collections[0].contract.id;
+  const tokenToSponsor = parseInt(collections[0].contract.tokens[0].identifier);
+
+  const sf = await Framework.create({ networkName, provider });
+  const signer = sf.createSigner({ privateKey, provider });
+
+  try {
+    const { gasPrice, maxFeePerGas, maxPriorityFeePerGas } = await hre.ethers.provider.getFeeData();
+    const deleteFlowOperation = sf.cfaV1.deleteFlow({
+      sender: address,
+      receiver: collectionToSponsor,
+      superToken: config[networkName].StemsFactory.acceptedToken,
+      userData: hre.ethers.utils.defaultAbiCoder.encode([ 'uint' ], [ tokenToSponsor ]),
+      overrides: { maxFeePerGas, maxPriorityFeePerGas, gasLimit: 2100000 }
+    });
+    const tx = await deleteFlowOperation.exec(signer);
+    console.log(`tx: ${tx.hash}`);
+    await tx.wait();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 async function main() {
   const [{ address }, accountTwo] = await hre.ethers.getSigners();
   console.log(`account: ${address}`);
@@ -169,8 +195,10 @@ async function main() {
   console.log(JSON.stringify({ collections }, null, 2))
 
   // the magic; in this case, account two will upgrade some of their fUSDC and then create a stream to the first collection contract available
-  // await upgradeUSDC(factory, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
-  // await createStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
+
+  await upgradeUSDC(factory, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
+  await createStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
+  await deleteStream(factory, collections, { address: accountTwo.address, privateKey: process.env.PRIVATE_KEY_2 });
 };
 
 // We recommend this pattern to be able to use async/await everywhere
