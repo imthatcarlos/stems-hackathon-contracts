@@ -8,7 +8,10 @@
     "localhost": "npx hardhat node",
     "metadata": "node ./scripts/generate_metadata.js",
     "deploy:localhost": "npx hardhat deploy --network localhost",
-    "deploy:rinkeby": "npx hardhat deploy --network rinkeby"
+    "deploy:rinkeby": "npx hardhat deploy --network rinkeby",
+    "demo:rinkeby": "HARDHAT_NETWORK=rinkeby node ./scripts/demo.js",
+    "deploy:ropsten": "npx hardhat deploy --network ropsten",
+    "demo:ropsten": "HARDHAT_NETWORK=ropsten node ./scripts/demo.js"
   },
   "dependencies": {
     "@nomiclabs/hardhat-web3": "^2.0.0",
@@ -16,6 +19,9 @@
     "@rari-capital/solmate": "^6.2.0",
     "@superfluid-finance/ethereum-contracts": "^1.0.0-rc.8",
     "@superfluid-finance/js-sdk": "^0.5.8",
+    "@superfluid-finance/sdk-core": "^0.2.0",
+    "graphql": "^16.2.0",
+    "graphql-request": "^3.7.0",
     "hardhat": "^2.6.4",
     "hardhat-deploy": "^0.9.4",
     "lodash": "^4.17.21"

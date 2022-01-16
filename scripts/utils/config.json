@@ -19,5 +19,12 @@
       "cfa": "0xF4C5310E51F6079F601a5fb7120bC72a70b96e2A",
       "acceptedToken": "0x0F1D7C55A2B133E000eA10EeC03c774e0d6796e8"
     }
+  },
+  "ropsten": {
+    "StemsFactory": {
+      "host": "0xF2B4E81ba39F5215Db2e05B2F66f482BB8e87FD2",
+      "cfa": "0xaD2F1f7cd663f6a15742675f975CcBD42bb23a88",
+      "acceptedToken": "0x2dC36872a445adF0bFf63cc0eeee52A2b801625f"
+    }
   }
 }

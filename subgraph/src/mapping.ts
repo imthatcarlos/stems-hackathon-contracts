@@ -17,19 +17,19 @@ import {
 } from "../generated/schema";
 
 export function handleCollectionCreated(event: CollectionCreated): void {
-  const tokenContractId = fetchAccount(event.params.token).id;
-  const factoryContractId = event.address.toString();
+  ERC721.create(event.params.token); // dynamically add to datasources
+
+  const tokenContractId = event.params.token.toHexString().toLowerCase();
+  const factoryContractId = event.address.toHexString();
   const artistId = fetchAccount(event.params.deployer).id;
 
   const entity = new StemsCollection(tokenContractId);
-  const artistEntity = new StemsArtist(event.params.deployer.toString());
+  const artistEntity = new StemsArtist(event.params.deployer.toHexString());
   const factoryEntity = new StemsFactoryContract(factoryContractId);
-
-  ERC721.create(event.params.token); // dynamically add to datasources
 
   entity.factory = factoryContractId;
   entity.artist = artistId;
-  entity.contract = tokenContractId;
+  entity.contract = fetchAccount(event.params.token).id;
   entity.timestamp = event.block.timestamp;
   entity.save();
 
@@ -43,7 +43,7 @@ export function handleCollectionCreated(event: CollectionCreated): void {
 // gets called when a stream is created/updated, with `flowRate` being the only value that could actually change
 export function handleStreamUpdated(event: StreamUpdated): void {
   const tokenContractId = fetchAccount(event.params.token).id;
-  const sponsorId = `${tokenContractId}/${event.params.sender.toString().toLowerCase()}/${event.params.tokenId.toHex()}`;
+  const sponsorId = `${tokenContractId}/${event.params.sender.toHexString().toLowerCase()}/${event.params.tokenId.toHex()}`;
   const entity = new StemsCollectionSponsor(sponsorId);
 
   entity.account = fetchAccount(event.params.sender).id;
@@ -57,7 +57,7 @@ export function handleStreamUpdated(event: StreamUpdated): void {
 
 export function handleStreamDeleted(event: StreamDeleted): void {
   const tokenContractId = fetchAccount(event.params.token).id;
-  const sponsorId = `${tokenContractId}/${event.params.sender.toString().toLowerCase()}/${event.params.tokenId.toHex()}`;
+  const sponsorId = `${tokenContractId}/${event.params.sender.toHexString().toLowerCase()}/${event.params.tokenId.toHex()}`;
   const removedEntity = StemsCollectionSponsor.load(sponsorId);
 
   if (removedEntity) {
