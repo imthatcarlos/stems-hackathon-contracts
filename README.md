@@ -11,6 +11,9 @@ yarn
 yarn compile
 ```
 
+## subgraph
+https://thegraph.com/hosted-service/subgraph/imthatcarlos/stemsdao-factory
+
 ## run demo script
 `yarn demo:ropsten` does a couple things:
 1. call `StemsFactory`.createCollection() which in turn deploys a new StemsERC721 contract
